@@ -13,7 +13,7 @@ const schema = {
     counterparty: { type: "string" },
     amount: { type: "number" },
     date: { type: "string", format: "date" },
-    note: { type: "string" },
+    desc: { type: "string" },
     categoryId: { type: "string" },
   },
   required: ["id"],

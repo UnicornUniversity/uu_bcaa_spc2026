@@ -8,6 +8,7 @@ const schema = {
   properties: {
     id: { type: "string" },
     name: { type: "string" },
+    desc: { type: "string" },
   },
   required: ["id"],
   additionalProperties: false,

@@ -7,6 +7,7 @@ const schema = {
   type: "object",
   properties: {
     name: { type: "string" },
+    desc: { type: "string" },
   },
   required: ["name"],
   additionalProperties: false,
