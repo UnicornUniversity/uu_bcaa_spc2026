@@ -2,12 +2,13 @@ import { useContext } from "react";
 import { CategoryContext } from "./category-provider";
 import Loading from "../common/loading";
 import Error from "../common/error";
+import CategoryList from "./category-list";
 
 const CategoryStateResolver = () => {
   const { data, state, error } = useContext(CategoryContext);
 
   if (data) {
-    return <div>success</div>;
+    return <CategoryList />;
   }
 
   if (state === "loading" && !data) {

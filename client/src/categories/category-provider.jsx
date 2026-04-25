@@ -7,13 +7,10 @@ const CategoryProvider = ({ children }) => {
   const [error, setError] = useState();
   const [state, setState] = useState();
 
-  console.log(data, error, state);
-
   useEffect(() => {
     const fetchCategories = async () => {
       setState("loading");
       const response = await fetch("/category/list");
-      console.log(response);
 
       if (response.ok) {
         const data = await response.json();
@@ -26,6 +23,24 @@ const CategoryProvider = ({ children }) => {
     };
     fetchCategories();
   }, []);
+
+  const handleCreate = async (name, desc) => {
+    const response = await fetch("/category/create", {
+      method: "POST",
+      body: JSON.stringify({ name, desc }),
+    });
+
+    if (response.ok) {
+      const newCategory = await response.json();
+      setData((currentData) => ({
+        itemList: [...currentData.itemList, newCategory],
+      }));
+      setState("success");
+    } else {
+      setError(response.statusText);
+      setState("error");
+    }
+  };
 
   return (
     <CategoryContext.Provider value={{ data, state, error }}>
