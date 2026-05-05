@@ -44,6 +44,7 @@ async function DeleteAbl(req, res) {
     // return properly filled dtoOut
     res.json({});
   } catch (e) {
+    console.log(e);
     res.status(500).json({ category: e.category });
   }
 }

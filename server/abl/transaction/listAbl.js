@@ -9,7 +9,7 @@ const categoryDao = require("../../dao/category-dao.js");
 const schema = {
   type: "object",
   properties: {
-    date: { type: "string" },
+    date: { type: "string", format: "date" },
   },
   required: [],
   additionalProperties: false,

@@ -1,17 +1,20 @@
 import { createContext, useState, useEffect } from "react";
 
-export const CategoryContext = createContext();
+export const TransactionContext = createContext();
 
-const CategoryProvider = ({ children }) => {
+const TransactionProvider = ({ children }) => {
   const [data, setData] = useState();
   const [error, setError] = useState();
   const [state, setState] = useState();
-
-  console.log(state);
+  const [date, setDate] = useState(
+    new Date().getFullYear() +
+      "-" +
+      (new Date().getMonth() + 1).toString().padStart(2, "0")
+  );
 
   const fetchCategories = async () => {
     setState("loading");
-    const response = await fetch("/category/list");
+    const response = await fetch("/transaction/list?date=" + date);
     if (response.ok) {
       const data = await response.json();
       setData(data);
@@ -24,20 +27,20 @@ const CategoryProvider = ({ children }) => {
 
   useEffect(() => {
     fetchCategories();
-  }, []);
+  }, [date]);
 
   const handleCreate = async (name, desc) => {
     setState("creating");
-    const response = await fetch("/category/create", {
+    const response = await fetch("/transaction/create", {
       method: "POST",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify({ name, desc }),
     });
 
     if (response.ok) {
-      const newCategory = await response.json();
+      const newTransaction = await response.json();
       setData((currentData) => {
-        currentData.itemList.push(newCategory);
+        currentData.itemList.push(newTransaction);
         return { ...currentData };
       });
       setState("success");
@@ -49,19 +52,19 @@ const CategoryProvider = ({ children }) => {
 
   const handleUpdate = async (id, name, desc) => {
     setState("updating_" + id);
-    const response = await fetch("/category/update", {
+    const response = await fetch("/transaction/update", {
       method: "POST",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify({ id, name, desc }),
     });
 
     if (response.ok) {
-      const newCategory = await response.json();
+      const newTransaction = await response.json();
       setData((currentData) => {
         const itemIndex = currentData.itemList.findIndex(
           (item) => item.id === id
         );
-        currentData.itemList[itemIndex] = newCategory;
+        currentData.itemList[itemIndex] = newTransaction;
         return { ...currentData };
       });
       setState("success");
@@ -73,7 +76,7 @@ const CategoryProvider = ({ children }) => {
 
   const handleDelete = async (id) => {
     setState("deleting_" + id);
-    const response = await fetch("/category/delete", {
+    const response = await fetch("/transaction/delete", {
       method: "POST",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify({ id }),
@@ -96,22 +99,24 @@ const CategoryProvider = ({ children }) => {
   };
 
   return (
-    <CategoryContext.Provider
+    <TransactionContext.Provider
       value={{
         data,
         state,
         error,
+        date,
         handlerMap: {
           handleCreate,
           handleUpdate,
           handleDelete,
           fetchCategories,
+          setDate,
         },
       }}
     >
       {children}
-    </CategoryContext.Provider>
+    </TransactionContext.Provider>
   );
 };
 
-export default CategoryProvider;
+export default TransactionProvider;
