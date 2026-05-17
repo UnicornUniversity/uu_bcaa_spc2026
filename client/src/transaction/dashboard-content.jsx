@@ -51,6 +51,8 @@ function DashboardContent() {
       }
     });
 
+    console.log(result);
+
     return result;
   }, [data]);
 
